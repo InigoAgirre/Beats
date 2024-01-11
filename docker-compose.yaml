@@ -1,0 +1,26 @@
+version: '3'
+services:
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:7.17.0
+    command: metricbeat -e
+    environment:
+      - SERVER_IP=${SERVER_IP}
+    volumes:
+      - ./config/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /proc:/hostfs/proc:ro
+      - /:/hostfs:ro
+
+  packetbeat:
+    image: docker.elastic.co/beats/packetbeat:7.17.0
+    command: packetbeat --strict.perms=false -e
+    user: packetbeat
+    environment:
+      - SERVER_IP=${SERVER_IP}
+    volumes:
+      - ./config/packetbeat.yml:/usr/share/packetbeat/packetbeat.yml:ro
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    network_mode: host
