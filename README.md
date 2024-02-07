@@ -1,3 +1,3 @@
 # beats
-packetbeats + metricbeat
+packetbeats + metricbeat + filebeat
 # Beats
